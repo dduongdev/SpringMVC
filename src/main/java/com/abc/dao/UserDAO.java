@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
@@ -57,4 +59,28 @@ public class UserDAO {
 
         return false;
     }
+    
+    public List<User> searchOnUsername(String searchKeyword) {
+    	List<User> searchResult = new ArrayList<User>();
+    	String sql = "SELECT * FROM users WHERE username LIKE ?";
+
+    	try (Connection conn = DatabaseConfig.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+    		stmt.setString(1, "%" + searchKeyword + "%");
+
+    			ResultSet rs = stmt.executeQuery();
+                
+                while (rs.next()) {
+                	searchResult.add(new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("created_at")));
+                }
+		} catch (SQLException e) {
+            e.printStackTrace();
+        }
+    	
+    	return searchResult;
+	}
 }

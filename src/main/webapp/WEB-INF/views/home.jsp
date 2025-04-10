@@ -38,6 +38,42 @@ if (user == null)
 			<!-- Sidebar Left: Danh sách bạn bè -->
 			<div class="col-md-3">
 				<div class="card p-3 mb-3">
+            		<div style="display: flex; flex-direction: row;">
+            			<form action="${pageContext.request.contextPath}/">
+	            			<input placeholder="Nhập username cần tìm..." name="search-keyword" value="" style=""/>
+	            			<button>Tìm</button>
+	            		</form>
+            		</div>
+            		
+            		<div>
+            			<%
+            				boolean hasSearch = (boolean) request.getAttribute("hasSearch");
+            				if (hasSearch) {
+            					List<User> searchResult = (List<User>) request.getAttribute("searchResult");
+                				if (searchResult.size() == 0) {
+            					%>
+            						<img src="${pageContext.request.contextPath}/resources/images/3-1-300x156.jpg" alt="Not found." style="width: 100%;" />
+            					<%
+                				} else {
+                					for (var t : searchResult) {
+               					%>
+               						<div class="d-flex align-items-center justify-content-between mb-2">
+    									<div class="d-flex align-items-center">
+    										<img
+    											src="${pageContext.request.contextPath}/resources/images/avt.jpg"
+    											alt="Avatar" class="rounded-circle me-2" width="30"> <span
+    											class="text-truncate" style="max-width: 120px;"><%=t.getUsername()%></span>
+    									</div>
+    								</div>
+               					<%
+                					}
+                				}
+            				}
+            			%>
+            		</div>
+            	</div>
+			
+				<div class="card p-3 mb-3">
 					<p class="fw-bold">Danh sach ngừoi theo dõi</p>
 					<%
 					List<User> userfed = (List<User>) request.getAttribute("userfed");
