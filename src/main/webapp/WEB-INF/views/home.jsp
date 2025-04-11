@@ -25,7 +25,7 @@ if (user == null)
 		</div>
 
 		<div class="navbar-nav ms-auto d-flex align-items-center">
-			<a href="profile"> <span class="text-white me-3">👤 Hồ sơ
+			<a href="${pageContext.request.contextPath}/profile/"> <span class="text-white me-3">👤 Hồ sơ
 					của bạn</span> <img
 				src="${pageContext.request.contextPath}/resources/images/avt.jpg"
 				alt="Avatar" class="rounded-circle" width="40">

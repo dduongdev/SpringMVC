@@ -11,4 +11,5 @@ public interface UserService {
     List<User> searchOnUsername(String username);
     boolean isEmailExists(String email);
     ExtendedUser getExtendedUserByUsername(String username);
+    void update(ExtendedUser user);
 }

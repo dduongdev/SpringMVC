@@ -38,7 +38,7 @@
                         <img src="${pageContext.request.contextPath}/resources/images/avt.jpg" alt="Avatar" class="rounded-circle mb-3" width="150" height="150">
                         <h4 class="card-title"><%= user.getUsername() %></h4>
                         <p><strong>Đang theo dõi:</strong> | <strong>Người theo dõi:</strong></p>
-                        <button class="btn btn-primary mb-3">Chỉnh sửa hồ sơ</button>
+                        <a href="${pageContext.request.contextPath}/profile/edit" class="btn btn-primary mb-3">Chỉnh sửa hồ sơ</a>
                         <form class="d-flex gap-2 align-items-center">
                             <select class="form-select w-25">
                                 <option selected>Trạng thái</option>

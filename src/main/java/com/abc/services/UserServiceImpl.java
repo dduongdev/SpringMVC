@@ -1,5 +1,6 @@
 package com.abc.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean isEmailExists(String email) {
-		// TODO Auto-generated method stub
-		return false;
+		return userDAO.isEmailExists(email);
 	}
 
 	@Override
 	public ExtendedUser getExtendedUserByUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ExtendedUser("dduongdev", "123", "kyvalaxz2021@gmail.com", LocalDate.of(2004, 3, 13), 1, "avt.jpg");
+	}
+
+	@Override
+	public void update(ExtendedUser user) {
+		userDAO.update(user);
 	}
 }

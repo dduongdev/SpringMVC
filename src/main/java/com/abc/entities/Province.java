@@ -20,4 +20,11 @@ public class Province {
 		this.name = name;
 	}
 
+	public Province(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
+	
 }

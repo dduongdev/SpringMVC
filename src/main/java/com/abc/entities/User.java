@@ -5,6 +5,8 @@ public class User {
 	private String username;
 	private String passWord;
 	private String createdAt;
+	
+	public User() {}
 
 	public User(int id, String username, String passWord, String createdAt) {
 		super();

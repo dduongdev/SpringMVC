@@ -1,14 +1,26 @@
 package com.abc.entities;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ExtendedUser extends User {
+import org.springframework.format.annotation.DateTimeFormat;
 
+public class ExtendedUser extends User implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String email;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate birthDate;
 	private int provinceId;
 	private String avatarFileName;
 
+	public ExtendedUser() {
+		
+	}
+	
 	public ExtendedUser(int id, String username, String passWord, String createdAt, String email, LocalDate birthDate,
 			int provinceId, String avatarFileName) {
 		super(id, username, passWord, createdAt);
@@ -57,6 +69,12 @@ public class ExtendedUser extends User {
 
 	public void setAvatarFileName(String avatarFileName) {
 		this.avatarFileName = avatarFileName;
+	}
+
+	@Override
+	public String toString() {
+		return "ExtendedUser [email=" + email + ", birthDate=" + birthDate + ", provinceId=" + provinceId
+				+ ", avatarFileName=" + avatarFileName + "]";
 	}
 
 }
