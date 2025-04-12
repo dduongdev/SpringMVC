@@ -1,98 +1,55 @@
 package com.abc.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.abc.config.DatabaseConfig;
 import com.abc.entities.Post;
 
 @Repository
+@Transactional
 public class PostDAO {
 
-    public List<Post> getALLPost(int id){
-        List<Post> posts = new ArrayList<>();
+    @Autowired
+    private SessionFactory sessionFactory;
 
-        String sql = "SELECT DISTINCT posts.*, users.username " +
-                     "FROM posts " +
-                     "JOIN users ON posts.user_id = users.id " +
-                     "LEFT JOIN follows ON posts.user_id = follows.followed_user_id " +
-                     "WHERE follows.following_user_id = ? OR posts.user_id = ? " +
-                     "ORDER BY posts.created_at DESC";
-
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id);
-            stmt.setInt(2, id); 
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                posts.add(new Post(
-                    rs.getInt("id"),
-                    rs.getString("title"),
-                    rs.getString("body"),
-                    rs.getInt("user_id"),
-                    rs.getString("status"),
-                    rs.getString("created_at")
-                ));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return posts;
+    private Session getCurrentSession() {
+        return sessionFactory.getCurrentSession();
     }
 
-    public List<Post> getPostById(int id){
-        List<Post> posts = new ArrayList<>();
-        String sql = "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC";
+    public List<Post> getAllPost(int id) {
+        String hql = "from Post";
+        Query<Post> query = getCurrentSession().createQuery(hql, Post.class);
+        return query.getResultList();
+    }
 
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
+    public List<Post> getPostById(int id) {
+        // Sửa câu lệnh HQL để tham chiếu đúng trường 'userId' và 'created_At'
+        String hql = "FROM Post p WHERE p.userId = :id ORDER BY p.created_At DESC";
 
-            while (rs.next()) {
-                posts.add(new Post(
-                    rs.getInt("id"),
-                    rs.getString("title"),
-                    rs.getString("body"),
-                    rs.getInt("user_id"),
-                    rs.getString("status"),
-                    rs.getString("created_at")
-                ));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return posts;
+        // Tạo truy vấn với HQL và ánh xạ vào lớp Post
+        Query<Post> query = getCurrentSession().createQuery(hql, Post.class);
+        
+        // Thiết lập tham số id trong truy vấn
+        query.setParameter("id", id);
+        
+        // Trả về danh sách kết quả
+        return query.getResultList();
     }
 
 
     public boolean createdPost(Post post) {
-        String sql = "INSERT INTO posts (title, body, user_id, status, created_at) VALUES (?, ?, ?, ?, NOW())";
-
-        try (Connection conn = DatabaseConfig.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, post.getTitle());
-            stmt.setString(2, post.getBody());
-            stmt.setInt(3, post.getUserId());
-            stmt.setString(4, post.getStatus());
-
-            return stmt.executeUpdate() > 0;
-
+        try {
+            getCurrentSession().persist(post);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 }

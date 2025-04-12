@@ -5,6 +5,8 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.Column;
+
 public class ExtendedUser extends User implements Serializable {
 
 	/**
@@ -13,8 +15,11 @@ public class ExtendedUser extends User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String email;
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	@Column(name = "birth_date	")
 	private LocalDate birthDate;
+	@Column(name = "province_id")
 	private int provinceId;
+	@Column(name = "avatar_file_name")
 	private String avatarFileName;
 
 	public ExtendedUser() {

@@ -1,39 +1,41 @@
 package com.abc.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.abc.config.DatabaseConfig;
 import com.abc.entities.Province;
 
+import jakarta.transaction.Transactional;
+
 @Repository
+@Transactional
 public class ProvinceDAO {
-	public List<Province> getAll() {
+
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    // Helper method to get the current session
+    private Session getCurrentSession() {
+        return sessionFactory.getCurrentSession();
+    }
+
+    // Method to get all provinces
+    public List<Province> getAll() {
         List<Province> provinces = new ArrayList<>();
-        String sql = "SELECT id, name FROM provinces";
+        String hql = "FROM Province"; // HQL query to get all provinces
 
-        try (Connection conn = DatabaseConfig.getConnection();
-        		PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-
-                Province province = new Province(id, name);
-                provinces.add(province);
-            }
-
-        } catch (SQLException e) {
+        try {
+            Query<Province> query = getCurrentSession().createQuery(hql, Province.class);
+            provinces = query.getResultList();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
         return provinces;
     }
 }
